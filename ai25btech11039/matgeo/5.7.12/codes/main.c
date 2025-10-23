@@ -32,9 +32,9 @@ int main() {
 
     // Step 5: check if result is zero matrix
     if (P[0][0]==0 && P[0][1]==0 && P[1][0]==0 && P[1][1]==0)
-        printf("✅ Verified: (A - 2I)(A - 3I) = 0 (Zero matrix)\n");
+        printf(" Verified: (A - 2I)(A - 3I) = 0 (Zero matrix)\n");
     else
-        printf("❌ Not zero — check calculations.\n");
+        printf(" Not zero — check calculations.\n");
 
     return 0;
 }
