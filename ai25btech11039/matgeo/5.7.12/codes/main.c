@@ -1,51 +1,40 @@
-
-
 #include <stdio.h>
-#include <stdbool.h>
 
-typedef struct { int a11, a12, a21, a22; } M2;
+int main() {
+    // given matrix A
+    int A[2][2] = {{4, 2}, {-1, 1}};
 
-/* helpers */
-M2 sub_scalar_I(M2 A, int s) {
-    M2 B = A;
-    B.a11 -= s;
-    B.a22 -= s;
-    return B;
-}
+    // Step 1: form (A - 2I)
+    int A2I[2][2] = {
+        {A[0][0] - 2, A[0][1]},
+        {A[1][0], A[1][1] - 2}
+    };
 
-M2 mul(M2 X, M2 Y) {
-    M2 Z;
-    Z.a11 = X.a11*Y.a11 + X.a12*Y.a21;
-    Z.a12 = X.a11*Y.a12 + X.a12*Y.a22;
-    Z.a21 = X.a21*Y.a11 + X.a22*Y.a21;
-    Z.a22 = X.a21*Y.a12 + X.a22*Y.a22;
-    return Z;
-}
+    // Step 2: form (A - 3I)
+    int A3I[2][2] = {
+        {A[0][0] - 3, A[0][1]},
+        {A[1][0], A[1][1] - 3}
+    };
 
-bool is_zero(M2 Z) {
-    return Z.a11==0 && Z.a12==0 && Z.a21==0 && Z.a22==0;
-}
+    // Step 3: multiply (A - 2I)(A - 3I)
+    int P[2][2];
+    P[0][0] = A2I[0][0]*A3I[0][0] + A2I[0][1]*A3I[1][0];
+    P[0][1] = A2I[0][0]*A3I[0][1] + A2I[0][1]*A3I[1][1];
+    P[1][0] = A2I[1][0]*A3I[0][0] + A2I[1][1]*A3I[1][0];
+    P[1][1] = A2I[1][0]*A3I[0][1] + A2I[1][1]*A3I[1][1];
 
-void printM(const char* name, M2 A) {
-    printf("%s = [[%d, %d], [%d, %d]]\n", name, A.a11, A.a12, A.a21, A.a22);
-}
+    // Step 4: print all results
+    printf("A = [[%d, %d], [%d, %d]]\n", A[0][0], A[0][1], A[1][0], A[1][1]);
+    printf("A - 2I = [[%d, %d], [%d, %d]]\n", A2I[0][0], A2I[0][1], A2I[1][0], A2I[1][1]);
+    printf("A - 3I = [[%d, %d], [%d, %d]]\n", A3I[0][0], A3I[0][1], A3I[1][0], A3I[1][1]);
+    printf("(A - 2I)(A - 3I) = [[%d, %d], [%d, %d]]\n",
+           P[0][0], P[0][1], P[1][0], P[1][1]);
 
-int main(void) {
-    M2 A = {4, 2, -1, 1};
+    // Step 5: check if result is zero matrix
+    if (P[0][0]==0 && P[0][1]==0 && P[1][0]==0 && P[1][1]==0)
+        printf("✅ Verified: (A - 2I)(A - 3I) = 0 (Zero matrix)\n");
+    else
+        printf("❌ Not zero — check calculations.\n");
 
-    M2 Aminus2I = sub_scalar_I(A, 2);  // A - 2I
-    M2 Aminus3I = sub_scalar_I(A, 3);  // A - 3I
-    M2 P = mul(Aminus2I, Aminus3I);    // (A - 2I)(A - 3I)
-
-    printM("A", A);
-    printM("A - 2I", Aminus2I);
-    printM("A - 3I", Aminus3I);
-    printM("(A - 2I)(A - 3I)", P);
-
-    if (is_zero(P)) {
-        printf("Verified: (A - 2I)(A - 3I) = 0 (zero matrix).\n");
-    } else {
-        printf("Not zero — check computations.\n");
-    }
     return 0;
 }
